@@ -1,4 +1,6 @@
-﻿public class OrderGeneratingBackgroundService : BackgroundService
+﻿using System.ComponentModel;
+
+public class OrderGeneratingBackgroundService : BackgroundService
 {
     private readonly ILogger<OrderGeneratingBackgroundService> _logger;
 
@@ -28,7 +30,7 @@
         {
             var scopedProcessingService =
                 scope.ServiceProvider
-                    .GetRequiredService<IScopedProcessingService>();
+                    .GetRequiredService<IScopedOrderProcessingService>();
 
             await scopedProcessingService.DoWork(stoppingToken);
         }

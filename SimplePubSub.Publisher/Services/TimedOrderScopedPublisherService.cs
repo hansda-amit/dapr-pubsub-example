@@ -1,14 +1,13 @@
 ﻿using Bogus;
 using Bogus.Extensions;
 using Dapr.Client;
-
-public class TimedOrderPublisherService : IScopedProcessingService
+public class TimedOrderScopedPublisherService : IScopedOrderProcessingService
 {
     int executionCount = 0;
     readonly ILogger _logger;
     readonly DaprClient _daprClient;
 
-    public TimedOrderPublisherService(ILogger<TimedOrderPublisherService> logger, DaprClient daprClient)
+    public TimedOrderScopedPublisherService(ILogger<TimedOrderScopedPublisherService> logger, DaprClient daprClient)
     {
         _logger = logger;
         _daprClient = daprClient;
@@ -19,8 +18,6 @@ public class TimedOrderPublisherService : IScopedProcessingService
         while (!stoppingToken.IsCancellationRequested)
         {
             executionCount++;
-
-            
 
             Random rnd = new Random();
             var numbers = rnd.Next(5,11);
@@ -33,7 +30,8 @@ public class TimedOrderPublisherService : IScopedProcessingService
             _logger.LogInformation("Procuring orders {ordersCount}", items.Count());
             foreach (var item in items)
             {
-                await _daprClient.PublishEventAsync("pubsub", "ordercreated", item, stoppingToken);
+                await _daprClient.PublishEventAsync("eventhubs-pubsub-orders", "topic-order", item, stoppingToken);
+                await _daprClient.PublishEventAsync("pubsub-rabbitmq", "ordercreated", item, stoppingToken);
                 _logger.LogInformation("Event:ordercreated payload:{payload}", item);
             }
 

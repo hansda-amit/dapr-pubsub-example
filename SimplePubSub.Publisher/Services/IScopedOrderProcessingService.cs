@@ -1,4 +1,4 @@
-﻿public interface IScopedProcessingService
+﻿public interface IScopedOrderProcessingService
 {
     Task DoWork(CancellationToken stoppingToken);
 }
