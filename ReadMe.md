@@ -1,4 +1,6 @@
-# A Really Stupid Project
+# A Really Smart Project
+created by Amit Hansda
+forked by Karthik
 
 ## Publisher
 ```
