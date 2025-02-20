@@ -1,4 +1,4 @@
-# A Really Stupid Project
+# A Really Smart Project
 
 ## Publisher
 ```
