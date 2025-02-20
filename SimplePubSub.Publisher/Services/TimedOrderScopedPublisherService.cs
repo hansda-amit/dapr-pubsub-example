@@ -28,13 +28,15 @@ public class TimedOrderScopedPublisherService : IScopedOrderProcessingService
             
             var items = faker.Generate(numbers);
             _logger.LogInformation("Procuring orders {ordersCount}", items.Count());
+            List<Task> tasks = new();
             foreach (var item in items)
             {
-                await _daprClient.PublishEventAsync("eventhubs-pubsub-orders", "topic-order", item, stoppingToken);
-                await _daprClient.PublishEventAsync("pubsub-rabbitmq", "ordercreated", item, stoppingToken);
-                _logger.LogInformation("Event:ordercreated payload:{payload}", item);
+                tasks.Add(_daprClient.PublishEventAsync("eventhubs-pubsub-orders", "topic-order", item, stoppingToken));
+                tasks.Add(_daprClient.PublishEventAsync("pubsub-rabbitmq", "ordercreated", item, stoppingToken));
+                _logger.LogInformation("Publishing Event:{eventType} payload:{payload}", "order-created", item);
             }
 
+            await Task.WhenAll(tasks);
             await Task.Delay(3500);
         }
     }
