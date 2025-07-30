@@ -19,6 +19,16 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "dapr-self-hosted-publisher": {
+      "commandName": "Executable",
+      "executablePath": "C:\\dapr\\dapr.exe",
+      "commandLineArgs": "run --app-id simple-publisher --enable-api-logging --app-port 7021 --app-protocol https -H 3500 -- dotnet run",
+      "workingDirectory": "..\\SimplePubSub.Publisher",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "nativeDebugging": true
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,

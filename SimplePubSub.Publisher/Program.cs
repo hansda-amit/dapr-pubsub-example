@@ -30,10 +30,11 @@ builder.Services.AddDaprClient(options =>
 
 
 #region Background Services
-builder.Services.AddHostedService<OrderGeneratingBackgroundService>();
+//builder.Services.AddHostedService<OrderGeneratingBackgroundService>();
+//builder.Services.AddScoped<IScopedOrderProcessingService, TimedOrderScopedPublisherService>();
 #endregion
 
-builder.Services.AddScoped<IScopedOrderProcessingService, TimedOrderScopedPublisherService>();
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -57,7 +58,8 @@ app.MapPost("/bulkorder", async (DaprClient daprClient, [FromServices] ILogger<P
     List<Task> tasks = new();
     foreach (var order in orders)
     {
-        tasks.Add(daprClient.PublishEventAsync("eventhubs-pubsub-orders", "topic-order", order));
+        //tasks.Add(daprClient.PublishEventAsync("eventhubs-pubsub-orders", "topic-order", order));
+        tasks.Add(daprClient.PublishEventAsync("pubsub", "topic-order", order));
     }
 
     await Task.WhenAll(tasks);
@@ -88,7 +90,8 @@ app.MapPost("/bulkusers", async (DaprClient daprClient, [FromServices]ILogger<Pr
     List<Task> tasks = new();
     foreach (var user in users)
     {
-        tasks.Add(daprClient.PublishEventAsync("eventhubs-pubsub-users", "topic-user", user));
+        tasks.Add(daprClient.PublishEventAsync("pubsub", "topic-user", user));
+        //tasks.Add(daprClient.PublishEventAsync("eventhubs-pubsub-users", "topic-user", user));
     }
     await Task.WhenAll(tasks);
     if (tasks.Any(x => !x.IsCompletedSuccessfully))

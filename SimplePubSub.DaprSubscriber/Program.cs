@@ -7,7 +7,7 @@ app.UseCloudEvents();
 
 app.MapSubscribeHandler();
 
-app.MapPost("/ordercreated", [Topic("pubsub", "ordercreated")] (ILogger<Program> logger, OrderPayload order) => {
+app.MapPost("/ordercreated", [Topic("pubsub", "topic-order")] (ILogger<Program> logger, OrderPayload order) => {
     logger.LogInformation("Order received: {orderId} at {totalCost}", order.OrderId, order.TotalCost);
     return Results.Ok();
 });
